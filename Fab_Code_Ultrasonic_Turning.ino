@@ -76,14 +76,14 @@ void loop()
   Serial.print(distanceR);
   Serial.println(" cm");
 
-  if(distanceDif <= 10)
+  if((distanceL > 100 || distanceL == 0) && (distanceR > 100 || distanceR == 0))
+    move = 'I';
+  else if(distanceDif <= 10)
   {
     if(distanceAvg <= 10)
       move = 'B';
-    else if(distanceAvg <= 30)
+    else(distanceAvg <= 30)
       move = 'F';
-    else
-      move = 'I';
   }
   else
   {
@@ -100,6 +100,7 @@ switch(move)
     digitalWrite(in2, LOW);
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
+    Serial.println("F");
     break;
 
   case 'B':
@@ -107,6 +108,7 @@ switch(move)
     digitalWrite(in2, HIGH);
     digitalWrite(in3, LOW);
     digitalWrite(in4, HIGH);
+    Serial.println("B");
     break;
 
   case 'L':
@@ -114,6 +116,7 @@ switch(move)
     digitalWrite(in2, LOW);
     digitalWrite(in3, LOW);
     digitalWrite(in4, HIGH);
+    Serial.println("L");
     break;
 
   case 'R':
@@ -121,6 +124,7 @@ switch(move)
     digitalWrite(in2, HIGH);
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
+    Serial.println("R");
     break;
 
   default:
@@ -128,6 +132,7 @@ switch(move)
     digitalWrite(in2, LOW);
     digitalWrite(in3, LOW);
     digitalWrite(in4, LOW);
+    Serial.println("I");
 }
   /*
   //movement backward when object within 10cm
