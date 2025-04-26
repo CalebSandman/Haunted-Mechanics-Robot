@@ -64,8 +64,8 @@ void loop()
   durationR = pulseIn(echoPinR, HIGH);
   distanceR = durationR * 0.034/2;
 
-  distanceAvg = (distanceL+distanceR)/2;
-  distanceDif = abs(distanceL-distanceR);
+  distanceAvg = (distanceL+distanceR)/2; //average distance between both sensors
+  distanceDif = abs(distanceL-distanceR); //the difference in distance between both sensors
 
   //prints distance to serial monitor (for testing)
   Serial.print("DistanceL: ");
@@ -76,26 +76,28 @@ void loop()
   Serial.print(distanceR);
   Serial.println(" cm");
 
-  if((distanceL > 100 || distanceL == 0) && (distanceR > 100 || distanceR == 0))
+  if((distanceL > 100 || distanceL == 0) && (distanceR > 100 || distanceR == 0)) //if both sensors report a distance of 0cm or greater than 100cm - Idle
     move = 'I';
-  else if(distanceDif <= 10)
+  else if(distanceDif <= 10) //else, if the sensors are reporting distances within 10cm of each other
   {
-    if(distanceAvg <= 10)
+    if(distanceAvg <= 10) //if the average distance is less than 10cm (close to an obj) - Move backward
       move = 'B';
-    else(distanceAvg <= 30)
+    else if(distanceAvg <= 30) //else, if the average distance is between 10cm and 30cm (close but not too close to an obj) - Move forward
       move = 'F';
+    else //distance is greater than 30cm - Idle
+      move = 'I';
   }
-  else
+  else //sensors should have readings greater than 10cm apart
   {
-    if(distanceL < distanceR)
+    if(distanceL < distanceR) //if obj is closer to left sensor - Turn left
       move = 'L';
-    else
+    else //obj should be closer to right sensor - Turn right
       move = 'R';
   }
 
 switch(move)
 {
-  case 'F':
+  case 'F': //move forward
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
     digitalWrite(in3, HIGH);
@@ -103,7 +105,7 @@ switch(move)
     Serial.println("F");
     break;
 
-  case 'B':
+  case 'B': //move backward
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
     digitalWrite(in3, LOW);
@@ -111,7 +113,7 @@ switch(move)
     Serial.println("B");
     break;
 
-  case 'L':
+  case 'L': //turn left
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
     digitalWrite(in3, LOW);
@@ -119,7 +121,7 @@ switch(move)
     Serial.println("L");
     break;
 
-  case 'R':
+  case 'R': //turn right
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
     digitalWrite(in3, HIGH);
@@ -127,7 +129,7 @@ switch(move)
     Serial.println("R");
     break;
 
-  default:
+  default: //idle
     digitalWrite(in1, LOW);
     digitalWrite(in2, LOW);
     digitalWrite(in3, LOW);
